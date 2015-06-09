@@ -29,3 +29,11 @@ exports.answer = function(req, res){
     }
     res.render('quizes/answer', {quiz:req.quiz, respuesta:resultado});
 };
+
+exports.busqueda = function(req, res){
+  var texto = '%' + req.query.search.toUpperCase() + '%';
+  models.Quiz.findAll({where: ["pregunta like ?", texto]}).then(
+    function(quizes){
+    res.render('quizes/index.ejs', {quizes:quizes});
+  }).catch(function(error){next(error);})
+}
