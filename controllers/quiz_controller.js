@@ -31,7 +31,7 @@ exports.answer = function(req, res){
 };
 
 exports.busqueda = function(req, res){
-  var texto = '%' + req.query.search.toUpperCase() + '%';
+  var texto = '%' + req.query.search + '%';
   models.Quiz.findAll({where: ["pregunta like ?", texto]}).then(
     function(quizes){
     res.render('quizes/index.ejs', {quizes:quizes});
