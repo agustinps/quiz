@@ -9,9 +9,13 @@
   <% var i; for(i=0; i<quizes.length; i++) { %>
     <tr>
       <td>
+        <%= quizes[i].tema %>
+      </td>
+      <td>
         <a href="<% if(search !== 'si') {%> quizes/<% } %><%= quizes[i].id %>">
         <%= quizes[i].pregunta %></a>
       </td>
+      <%if(session.user){%>
       <td>
         <a href="<% if(search !== 'si') {%> quizes/<% } %><%= quizes[i].id %>/edit">
         <button>editar</button></a>
@@ -23,10 +27,13 @@
           </button>
         </form>
       </td>
+      <%}%>
     </tr>
   <% } %>
 </table>
 <p>
+<%if(session.user){%>
 <a href="<% if(search !== 'si') {%> quizes/<% } %>new">
   <button type="button">Crear pregunta</button>
 </a>
+<%}%>

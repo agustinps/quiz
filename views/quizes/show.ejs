@@ -3,3 +3,24 @@
   <input type="text" name="respuesta" PlaceHolder="Respuesta"/>
   <input type="submit" value="Enviar">
 </form>
+<p>
+  <a href="/quizes/<%= quiz.id %>/comments/new">
+    <button>nuevo comentario</button>
+  </a>
+</p>
+<p>
+  <strong>Comentarios:</strong>
+</p>
+<div id="comentarios">
+<% var i; for(i=0; i<quiz.comments.length; i++) { %>
+  <%if(quiz.comments[i].publicado || session.user){%>
+    <p>- <%= quiz.comments[i].texto %>
+    <%if(session.user && !quiz.comments[i].publicado){%>
+      <a href="/quizes/<%= quiz.id %>/comments/<%=quiz.comments[i].id%>/publish">
+        <button>publicar</button>
+      </a>
+    <%}%>
+    </p>
+  <%}%>
+<%}%>
+</div>

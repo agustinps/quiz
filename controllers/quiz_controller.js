@@ -1,10 +1,14 @@
 var models = require('../models/models.js');
 
 exports.load = function(req, res, next, quizId){
-  models.Quiz.find(quizId).then(
+  //models.Quiz.find(quizId).then(
+  models.Quiz.find({
+    where:{id:Number(quizId)},
+    include: [{model: models.Comment}]
+  }).then(
     function(quiz){
       if(quiz){
-        req.quiz = quiz;
+        req.quiz = quiz;        
         next();
       }else{ next(new Error('No existe quizId=' + quizId));}
     }
@@ -50,9 +54,7 @@ exports.new = function(req, res){
 
 
 exports.create = function (req, res) {
-  console.log("\ntema : " + req.tema);
   var quiz= models.Quiz.build(req.body.quiz);
-  console.log("\ntema : " + quiz.tema);
   var errors = quiz.validate();
   if (errors)
   {
