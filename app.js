@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var partials = require('express-partials');
 var methodOverride = require('method-override');
 var session = require('express-session');
+
 var routes = require('./routes/index');
 
 var app = express();
@@ -22,6 +23,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser('Quiz 2015'));
 app.use(session());
+
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(partials());
@@ -31,6 +33,28 @@ app.use(function(req, res, next){
     req.session.redir= req.path;
   }
   res.locals.session = req.session;
+  next();
+});
+
+//AutoLogout
+app.use(function(req, res, next) {
+  var dActual = new Date();
+  var dAnterior = new Date(req.session.dAnterior);
+  console.log("\nactual : " + dActual);
+  console.log("\nanterior : " + dAnterior);
+  console.log("\ndiferencia hora : " + Math.abs((dActual - dAnterior) / 1000));
+  if (req.session.user) {
+    var dif = Math.abs((dActual - dAnterior) / 1000);
+    if ((!isNaN(dif)) && ( dif > 120)) {
+      //delete req.session.user;
+      delete req.session.user;
+      delete req.session.dAnterior;
+      console.log("\n borramos session");
+    } else {
+      req.session.dAnterior = dActual;
+      console.log("\nguardamos sesion");
+    }
+  };
   next();
 });
 
@@ -68,5 +92,6 @@ app.use(function(err, req, res, next) {
         errors: []
     });
 });
+
 
 module.exports = app;
